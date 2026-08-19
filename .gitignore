@@ -1,0 +1,11 @@
+.impeccable
+.claude
+.env
+.env.local
+.env.example
+PRODUCT.md
+node_modules
+dist
+DESIGN.md
+package-lock.json
+.DS_Store

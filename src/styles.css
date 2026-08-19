@@ -1,0 +1,1256 @@
+/* ===========================================================================
+   CATÁLOGO DEL ESTUDIO — sistema visual
+
+   Tinta clara sobre negro. Los tokens van por rol, no por color: --fondo es el
+   suelo de la página y --tinta la marca que se imprime encima, así que invertir
+   la página es cambiarles el valor y nada más.
+
+   El paspartú de las láminas se queda en papel: es el papel real del flash que
+   Diego pinta, y sobre negro cada lámina pasa a leerse como objeto iluminado.
+   =========================================================================== */
+
+:root {
+  --fondo: #14120e;
+  --fondo-alza: #1f1c16;
+  --papel: #ddd8c8;
+  --tinta: #edece6;
+  --tinta-suave: #a39c8e;
+
+  /* Dos rojos por contraste, no por gusto: #a8232c sobre negro da 2.9:1 y no
+     alcanza ni para texto grande. El claro rotula, el hondo llena. */
+  --rojo: #c8323a;
+  --rojo-campo: #a8232c;
+  --rojo-hondo: #971d24;
+
+  --verde: #3d6a52;
+  --ocre: #d2a83f;
+
+  --font-display: 'Bevan', 'Rockwell', Georgia, serif;
+  --font-texto: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+
+  --ancho: 78rem;
+  --canal: clamp(1.25rem, 4vw, 3.5rem);
+  --ritmo: clamp(3.5rem, 9vw, 7.5rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--font-texto);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Grano de papel de catálogo: dos tramas finas, sin imagen externa. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(237, 236, 230, 0.028) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(237, 236, 230, 0.018) 0 1px, transparent 1px 4px);
+}
+
+/* ─── Tipografía base ─────────────────────────────────────────────────────── */
+
+.titular {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 1.2rem + 3.6vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.rotulo {
+  font-family: var(--font-texto);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  margin: 0 0 0.9rem;
+}
+
+.rotulo--claro {
+  color: rgba(236, 236, 231, 0.72);
+}
+
+p {
+  margin: 0 0 1.1em;
+  max-width: 62ch;
+}
+
+a {
+  color: inherit;
+}
+
+/* ─── Filetes ─────────────────────────────────────────────────────────────── */
+
+.rule {
+  display: block;
+  width: 100%;
+  height: 14px;
+  color: var(--tinta);
+  stroke: currentColor;
+}
+
+.filete {
+  margin: 1.4rem 0 1.8rem;
+}
+
+.filete--claro {
+  color: rgba(236, 236, 231, 0.8);
+}
+
+/* ─── Saltar al contenido ─────────────────────────────────────────────────── */
+
+.saltar {
+  position: absolute;
+  left: -9999px;
+  z-index: 60;
+  background: var(--tinta);
+  color: var(--fondo);
+  padding: 0.85rem 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+}
+
+.saltar:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+:where(a, button, input, textarea):focus-visible {
+  outline: 3px solid var(--rojo);
+  outline-offset: 3px;
+}
+
+/* ─── Índice fijo ─────────────────────────────────────────────────────────── */
+
+.indice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 2.5rem);
+  padding: 0.65rem var(--canal);
+  background: var(--fondo);
+  border-bottom: 2px solid var(--tinta);
+  box-shadow: 0 1px 0 0 var(--tinta);
+  transform: translateY(-105%);
+  transition: transform 260ms ease;
+}
+
+.indice.is-visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indice {
+    transition: none;
+  }
+}
+
+.indice__mastil {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.indice__lista {
+  display: flex;
+  gap: clamp(0.75rem, 2.5vw, 1.75rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.indice__lista a {
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.indice__lista a:hover {
+  border-bottom-color: var(--rojo);
+}
+
+.indice__cta {
+  background: var(--rojo);
+  color: var(--tinta);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--tinta);
+  box-shadow: 3px 3px 0 0 var(--tinta);
+  white-space: nowrap;
+}
+
+.indice__cta:hover {
+  background: var(--rojo-hondo);
+}
+
+@media (max-width: 44rem) {
+  .indice__lista {
+    display: none;
+  }
+  .indice__mastil {
+    margin-right: auto;
+  }
+}
+
+/* ─── Tapa ────────────────────────────────────────────────────────────────── */
+
+.tapa {
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  position: relative;
+  z-index: 2;
+}
+
+/* Tapa de una sola cosa: el nombre y el botón, centrados dentro del marco. Sin
+   lámina, sin bajada, sin renglón de edición. La lámina 01 arranca la sección
+   siguiente, así que el trabajo aparece al primer scroll. */
+.tapa__marco {
+  min-height: calc(100svh - clamp(1.5rem, 4vw, 3rem));
+  border: 3px solid var(--tinta);
+  outline: 1px solid var(--tinta);
+  outline-offset: 6px;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Con la tapa vacía el nombre puede pesar de verdad: es lo único que hay. */
+.mastil {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.5rem, 13vw, 11rem);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+}
+
+.mastil span:last-child {
+  color: var(--rojo);
+}
+
+.mastil__filete {
+  width: min(30rem, 100%);
+  margin: clamp(1.75rem, 4vw, 2.75rem) 0 clamp(2rem, 4.5vw, 3rem);
+}
+
+/* ─── Placa (marco de lámina) ─────────────────────────────────────────────── */
+
+.placa {
+  border: 2.5px solid var(--tinta);
+  outline: 1px solid var(--tinta);
+  outline-offset: 5px;
+  background: var(--papel);
+  overflow: hidden;
+}
+
+.placa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Una obra se muestra entera. Recortarla es romperla: la lámina se ve completa,
+   sobre el papel del catálogo como paspartú. Las fotos del estudio sí van a cover. */
+.placa--obra {
+  display: grid;
+  place-items: center;
+  padding: clamp(0.6rem, 1.4vw, 1.1rem);
+}
+
+.placa--obra img {
+  object-fit: contain;
+}
+
+/* Sobre el campo rojo la placa necesita menos peso: el borde ya es claro por
+   defecto, así que sólo se afina el filete de afuera. */
+.placa--oscura {
+  outline-color: rgba(237, 236, 230, 0.5);
+}
+
+/* ─── Ficha (pie de lámina) ───────────────────────────────────────────────── */
+
+.ficha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  margin: 1.35rem 0 0;
+  max-width: none;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.ficha__n {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--tinta);
+  color: var(--fondo);
+  padding: 0.15rem 0.45rem;
+}
+
+.ficha__t {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  letter-spacing: -0.005em;
+}
+
+.ficha__d {
+  color: var(--tinta-suave);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* min-width, no max-width: con max-width el pie entra en la misma línea que el
+   título y la ficha queda desalineada de figura a figura. */
+.ficha__pie {
+  flex: 1 0 100%;
+  min-width: 100%;
+  color: var(--tinta-suave);
+}
+
+/* La ficha sobre el campo rojo: el chip se queda claro (ya lo es por defecto) y
+   sólo cambia a tinta roja honda para separarse del campo. */
+.ficha--clara .ficha__n {
+  color: var(--rojo-hondo);
+}
+
+/* ─── Secciones ───────────────────────────────────────────────────────────── */
+
+.seccion {
+  position: relative;
+  z-index: 2;
+  /* La barra de índice es fija: los anclajes tienen que despejarla. */
+  scroll-margin-top: 4.5rem;
+  padding: var(--ritmo) var(--canal);
+  max-width: var(--ancho);
+  margin: 0 auto;
+}
+
+.seccion__cabecera {
+  margin-bottom: 2rem;
+}
+
+.seccion__intro {
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.25rem);
+  max-width: 54ch;
+  color: var(--tinta-suave);
+  margin-bottom: 3rem;
+}
+
+/* ─── Grilla de láminas ───────────────────────────────────────────────────── */
+
+.grilla {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.25rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.celda--ancha {
+  grid-column: span 2;
+}
+
+.celda__fig {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.celda--ancha .placa {
+  aspect-ratio: 16 / 11;
+}
+
+.celda:not(.celda--ancha) .placa {
+  aspect-ratio: 4 / 5;
+}
+
+/* Mismo alto que las celdas con lámina, o la fila queda desparejada. */
+.reservada__marco {
+  aspect-ratio: 4 / 5;
+  border: 2.5px dashed var(--tinta-suave);
+  outline: 1px solid var(--tinta-suave);
+  outline-offset: 5px;
+  background: var(--fondo-alza);
+  display: grid;
+  place-items: center;
+  padding: 22%;
+}
+
+.reservada__motivo {
+  width: 100%;
+  height: auto;
+  color: var(--tinta-suave);
+  opacity: 0.3;
+}
+
+.celda--reservada .ficha__n {
+  background: var(--tinta-suave);
+}
+
+.celda--reservada .ficha__t {
+  color: var(--tinta-suave);
+}
+
+@media (max-width: 60rem) {
+  .grilla {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .celda--ancha {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+  .celda--ancha .placa {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 34rem) {
+  .grilla {
+    grid-template-columns: 1fr;
+  }
+  .celda--ancha {
+    grid-column: span 1;
+  }
+}
+
+/* ─── La mano: campo rojo a página completa ───────────────────────────────── */
+
+.seccion--mano {
+  max-width: none;
+  background: var(--rojo-campo);
+  color: var(--tinta);
+  border-top: 3px solid var(--tinta);
+  border-bottom: 3px solid var(--tinta);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.seccion--mano::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(23, 20, 15, 0.07) 0 2px,
+    transparent 2px 9px
+  );
+}
+
+.mano__grid {
+  position: relative;
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 0 var(--canal);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.titular--claro {
+  color: var(--tinta);
+}
+
+.mano__texto p {
+  color: rgba(236, 236, 231, 0.9);
+}
+
+.mano__fig {
+  margin: 0;
+}
+
+.mano__fig .placa {
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 60rem) {
+  .mano__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── El estudio ──────────────────────────────────────────────────────────── */
+
+.estudio__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2rem, 4.5vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.estudio__item {
+  margin: 0;
+}
+
+.estudio__item--ancho {
+  grid-column: span 2;
+}
+
+.estudio__item .placa {
+  aspect-ratio: 4 / 3;
+}
+
+.estudio__item--ancho .placa {
+  aspect-ratio: 16 / 9;
+}
+
+@media (max-width: 44rem) {
+  .estudio__grid {
+    grid-template-columns: 1fr;
+  }
+  .estudio__item--ancho {
+    grid-column: span 1;
+  }
+  .estudio__item--ancho .placa {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ─── Pasos ───────────────────────────────────────────────────────────────── */
+
+.pasos {
+  list-style: none;
+  margin: 0 0 3rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.paso {
+  display: flex;
+  gap: 1.1rem;
+  border-top: 2px solid var(--tinta);
+  padding-top: 1.25rem;
+}
+
+.paso__n {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--rojo);
+  flex: none;
+}
+
+.paso__titulo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.22rem;
+  line-height: 1.15;
+  margin: 0 0 0.6rem;
+}
+
+.paso__cuerpo p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--tinta-suave);
+}
+
+@media (max-width: 52rem) {
+  .pasos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Nota impresa: caja con banda roja arriba. Los filetes de este mundo corren
+   horizontales, como en un pie de imprenta; una pestaña de color al costado es
+   chrome de alerta web y no pertenece acá. */
+.aviso {
+  border: 2.5px solid var(--tinta);
+  border-top: 7px solid var(--rojo);
+  background: var(--fondo-alza);
+  padding: 1.1rem 1.35rem;
+  max-width: 56ch;
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.aviso strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.aviso--chico {
+  font-size: 0.9rem;
+  margin: 0 0 1.25rem;
+}
+
+/* ─── Pedir turno ─────────────────────────────────────────────────────────── */
+
+/* Sin padding-bottom: el pie ya suma su propio margin-top del mismo ritmo,
+   así que dejarlo duplicaría el espacio antes del pie. */
+.seccion--pedido {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.pedido {
+  border: 3px dashed var(--tinta);
+  background: var(--fondo-alza);
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  box-shadow: 6px 6px 0 0 rgba(237, 236, 230, 0.1);
+}
+
+.pedido__cabecera {
+  margin-bottom: 2.25rem;
+}
+
+.pedido__nota {
+  color: var(--tinta-suave);
+  margin: 0;
+  max-width: 48ch;
+}
+
+.pedido__campos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem clamp(1.25rem, 3vw, 2.25rem);
+}
+
+/* Los renglones tienen que alinearse entre columnas como en un formulario impreso:
+   la ayuda opcional empuja el input, así que el input se pega abajo de la celda. */
+.campo {
+  margin: 0;
+  max-width: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.campo--ancho {
+  grid-column: span 2;
+}
+
+.campo__etiqueta {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.campo__ayuda {
+  font-size: 0.8rem;
+  color: var(--tinta-suave);
+  margin-top: 0.2rem;
+}
+
+.campo__input {
+  font: inherit;
+  color: inherit;
+  margin-top: auto;
+  padding: 0.7rem 0.15rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid var(--tinta);
+  border-radius: 0;
+  resize: vertical;
+  width: 100%;
+}
+
+.campo__input:hover {
+  background: rgba(237, 236, 230, 0.05);
+}
+
+textarea.campo__input {
+  border: 2.5px solid var(--tinta);
+  padding: 0.7rem 0.8rem;
+  background: var(--fondo);
+}
+
+/* El placeholder del navegador hereda un gris que sobre negro desaparece. */
+.campo__input::placeholder {
+  color: var(--tinta-suave);
+  opacity: 1;
+}
+
+.campo--error .campo__input {
+  border-color: var(--rojo);
+}
+
+.campo__error {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--rojo-hondo);
+}
+
+.pedido__pie {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
+  border-top: 2px solid var(--tinta);
+  padding-top: 1.75rem;
+}
+
+.pedido__legal {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+  max-width: 34ch;
+}
+
+@media (max-width: 44rem) {
+  .pedido__campos {
+    grid-template-columns: 1fr;
+  }
+  .campo--ancho {
+    grid-column: span 1;
+  }
+}
+
+.boton {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+  background: var(--rojo);
+  color: var(--tinta);
+  border: 2.5px solid var(--tinta);
+  box-shadow: 5px 5px 0 0 var(--tinta);
+  padding: 0.85rem 1.9rem;
+  cursor: pointer;
+  transition: transform 90ms ease, box-shadow 90ms ease, background 140ms ease;
+}
+
+.boton:hover {
+  background: var(--rojo-hondo);
+}
+
+.boton:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 0 var(--tinta);
+}
+
+/* El de la tapa es un enlace, no un submit: necesita portarse como bloque. */
+.boton--grande {
+  display: inline-block;
+  text-decoration: none;
+  font-size: clamp(1.15rem, 0.95rem + 0.9vw, 1.6rem);
+  padding: 1.05rem 2.5rem;
+  box-shadow: 6px 6px 0 0 var(--tinta);
+}
+
+.boton--grande:active {
+  transform: translate(6px, 6px);
+}
+
+.boton--fantasma {
+  background: transparent;
+  color: var(--tinta);
+  font-size: 0.95rem;
+  box-shadow: 3px 3px 0 0 var(--tinta);
+}
+
+.boton--fantasma:hover {
+  background: var(--tinta);
+  color: var(--fondo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton {
+    transition: none;
+  }
+}
+
+/* Pedido recibido */
+
+.pedido--recibido {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pedido--recibido .filete {
+  width: min(22rem, 100%);
+}
+
+.pedido--recibido p {
+  max-width: 46ch;
+}
+
+.pedido--recibido .aviso {
+  text-align: left;
+}
+
+.pedido__sello {
+  width: clamp(7rem, 20vw, 9.5rem);
+  height: auto;
+  color: var(--rojo);
+  opacity: 0.9;
+  margin-bottom: 1.25rem;
+  transform: rotate(-9deg);
+}
+
+.stamp-word {
+  font-family: var(--font-display);
+  font-size: 30px;
+  fill: currentColor;
+  stroke: none;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Marcadores de dato pendiente ────────────────────────────────────────── */
+
+.marcador,
+.pendiente {
+  font-size: 0.82rem;
+  color: var(--tinta-suave);
+}
+
+.marcador {
+  border: 1.5px dashed var(--tinta-suave);
+  padding: 0.55rem 0.85rem;
+  max-width: 46ch;
+}
+
+.pendiente {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pendiente__marca {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1.5px dashed currentColor;
+  padding: 0.1rem 0.4rem;
+  opacity: 0.85;
+}
+
+/* ─── Pie ─────────────────────────────────────────────────────────────────── */
+
+/* Antes el pie era "la parte oscura" de una página clara. Ahora la página es
+   oscura, así que se separa por elevación y por un filete grueso, no por color. */
+.pie {
+  position: relative;
+  z-index: 2;
+  background: var(--fondo-alza);
+  color: var(--tinta);
+  border-top: 3px solid var(--tinta);
+  padding: var(--ritmo) var(--canal) 2.5rem;
+  margin-top: var(--ritmo);
+}
+
+.pie > .filete {
+  max-width: var(--ancho);
+  margin: 0 auto 3rem;
+}
+
+.pie__grid {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.pie__linea {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+}
+
+.pie__chico {
+  font-size: 0.85rem;
+  color: rgba(236, 236, 231, 0.66);
+  margin: 0.35rem 0 0;
+}
+
+.pie .pendiente,
+.pie .pie__chico .pendiente {
+  color: rgba(236, 236, 231, 0.66);
+}
+
+.pie__ig {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--ocre);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.pie__ig:hover {
+  border-bottom-color: var(--ocre);
+}
+
+.pie__firma {
+  max-width: var(--ancho);
+  margin: 3.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(236, 236, 231, 0.28);
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  color: rgba(236, 236, 231, 0.6);
+}
+
+@media (max-width: 52rem) {
+  .pie__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Revelado al entrar en pantalla ──────────────────────────────────────── */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 620ms cubic-bezier(0.2, 0.7, 0.25, 1),
+    transform 620ms cubic-bezier(0.2, 0.7, 0.25, 1);
+}
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.grilla [data-reveal]:nth-child(2),
+.estudio__grid [data-reveal]:nth-child(2) {
+  transition-delay: 70ms;
+}
+
+.grilla [data-reveal]:nth-child(3),
+.estudio__grid [data-reveal]:nth-child(3) {
+  transition-delay: 140ms;
+}
+
+.pasos [data-reveal]:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.pasos [data-reveal]:nth-child(3) {
+  transition-delay: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ===========================================================================
+   ADMIN — el libro de turnos
+
+   Misma tinta y misma tipografía que el catálogo, pero es una superficie de
+   trabajo: más densa, ancho de lectura acotado, sin campos de color ni
+   revelados. Diego abre esto para resolver, no para mirarlo.
+   =========================================================================== */
+
+.admin {
+  position: relative;
+  z-index: 2;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) var(--canal) 6rem;
+}
+
+.admin__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.admin__titulo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.admin__salida {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--tinta-suave);
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+}
+
+.admin__salida:hover {
+  color: var(--tinta);
+  border-bottom-color: var(--rojo);
+}
+
+.admin__filete {
+  margin: 1.25rem 0 1.75rem;
+}
+
+.admin__demo {
+  max-width: none;
+  margin-bottom: 2.25rem;
+}
+
+/* ─── Pestañas ────────────────────────────────────────────────────────────── */
+
+/* Nunca envuelve: el diseño de pestaña activa (caja que tapa el filete de
+   abajo) sólo funciona en una fila. Si no entran las tres, la fila scrollea
+   en vez de apilarse. */
+.admin__pestanas {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--tinta);
+  padding-bottom: 0;
+  margin-bottom: 2rem;
+}
+
+.pestana {
+  flex: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  background: transparent;
+  border: 2px solid transparent;
+  border-bottom: none;
+  padding: 0.7rem 1rem;
+  margin-bottom: -2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pestana:hover {
+  color: var(--tinta);
+}
+
+/* La pestaña activa se conecta con el contenido tapando el filete de abajo. */
+.pestana.is-activa {
+  color: var(--tinta);
+  background: var(--fondo-alza);
+  border-color: var(--tinta);
+  border-bottom: 2px solid var(--fondo-alza);
+}
+
+/* En tinta, no en rojo: a 0.9rem el rojo de flash no llega a 4.5:1 sobre
+   fondo oscuro (falla WCAG AA para texto chico). */
+.pestana__n {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  color: var(--tinta);
+}
+
+/* ─── Lista ───────────────────────────────────────────────────────────────── */
+
+.admin__seccion-titulo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.35rem;
+  margin: 0 0 1.5rem;
+}
+
+.admin__vacio {
+  border: 2px dashed var(--tinta-suave);
+  color: var(--tinta-suave);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  max-width: none;
+}
+
+.admin__pedidos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* ─── Ficha de pedido ─────────────────────────────────────────────────────── */
+
+.pedido-ficha {
+  background: var(--fondo-alza);
+  border: 2px solid var(--tinta);
+  padding: clamp(1.1rem, 2.5vw, 1.75rem);
+}
+
+.pedido-ficha__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.pedido-ficha__nombre {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.pedido-ficha__fecha {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  margin-left: auto;
+}
+
+/* La fecha confirmada se destaca con filete y rótulo, no con pestaña lateral. */
+.pedido-ficha__turno {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0 0.7rem;
+  border-top: 2px solid var(--rojo);
+  border-bottom: 1px solid rgba(237, 236, 230, 0.18);
+  max-width: none;
+  font-size: 0.95rem;
+}
+
+/* Rótulo, no acento: a este tamaño el rojo no llega a 4.5:1 (WCAG AA). El
+   filete rojo de arriba ya marca el turno confirmado. */
+.pedido-ficha__turno strong {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  margin-right: 0.5rem;
+}
+
+.pedido-ficha__nota {
+  margin: 0 0 1rem;
+  color: var(--tinta-suave);
+  font-size: 0.9rem;
+  max-width: none;
+}
+
+/* La idea es lo que Diego lee primero: por eso pesa más que las fichas de datos. */
+.pedido-ficha__idea {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  max-width: 58ch;
+}
+
+.pedido-ficha__datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.9rem 1.5rem;
+  margin: 0 0 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(237, 236, 230, 0.18);
+}
+
+.dato dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.dato dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+}
+
+.dato--sin {
+  color: var(--tinta-suave);
+  font-style: italic;
+}
+
+.pedido-ficha__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.boton--chico {
+  font-size: 0.92rem;
+  padding: 0.5rem 1.1rem;
+  box-shadow: 3px 3px 0 0 var(--tinta);
+}
+
+.boton--chico:active {
+  transform: translate(3px, 3px);
+}
+
+@media (max-width: 34rem) {
+  .pedido-ficha__fecha {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+  .pedido-ficha__acciones .boton {
+    flex: 1 1 auto;
+  }
+}
