@@ -42,6 +42,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -58,6 +59,7 @@ body {
   font-size: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
   line-height: 1.62;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
 }
 
 img {
@@ -233,12 +235,55 @@ a {
   background: var(--rojo-hondo);
 }
 
+.ig-avatar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--tinta);
+  transition: opacity 0.2s;
+}
+
+.ig-avatar:hover {
+  opacity: 0.8;
+}
+
+.ig-avatar__border {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ig-avatar__border img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--fondo);
+}
+
+.indice__ig-avatar {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+}
+
 @media (max-width: 44rem) {
   .indice__lista {
     display: none;
   }
   .indice__mastil {
     margin-right: auto;
+  }
+  .indice__ig-avatar span {
+    display: none;
   }
 }
 
@@ -264,6 +309,27 @@ a {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.tapa__scroll-indicador {
+  margin-top: 0;
+  color: var(--tinta-suave);
+  width: 3rem;
+  height: 3rem;
+  animation: bounce 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Con la tapa vacía el nombre puede pesar de verdad: es lo único que hay. */
@@ -894,8 +960,8 @@ textarea.campo__input {
   background: var(--fondo-alza);
   color: var(--tinta);
   border-top: 3px solid var(--tinta);
-  padding: var(--ritmo) var(--canal) 2.5rem;
-  margin-top: var(--ritmo);
+  padding: 2rem var(--canal) 2.5rem;
+  margin-top: 3rem;
 }
 
 .pie > .filete {
@@ -906,20 +972,37 @@ textarea.campo__input {
 .pie__grid {
   max-width: var(--ancho);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(2rem, 4vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.pie .rotulo {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 
 .pie__linea {
-  margin: 0 0 0.55rem;
-  font-size: 0.95rem;
+  margin: 0 0 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Make the AvatarIG in the footer slightly smaller */
+.pie__linea .ig-avatar {
+  font-size: 1.05rem;
+}
+
+.pie__linea .ig-avatar__border {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .pie__chico {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: rgba(236, 236, 231, 0.66);
-  margin: 0.35rem 0 0;
+  margin: 0;
 }
 
 .pie .pendiente,
@@ -951,11 +1034,7 @@ textarea.campo__input {
   color: rgba(236, 236, 231, 0.6);
 }
 
-@media (max-width: 52rem) {
-  .pie__grid {
-    grid-template-columns: 1fr;
-  }
-}
+
 
 /* ─── Revelado al entrar en pantalla ──────────────────────────────────────── */
 

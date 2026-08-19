@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Rule, Anchor, Dagger, Stamp } from './Ornaments.jsx'
+import { Rule, Anchor, Dagger, Stamp, ArrowDown } from './Ornaments.jsx'
 import Admin from './Admin.jsx'
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -76,21 +76,21 @@ const ESTUDIO = [
 const PASOS = [
   {
     n: 'I',
-    titulo: 'Llenás el pedido',
+    titulo: 'Escribís por Instagram',
     texto:
-      'Contás la idea, el tamaño aproximado, la zona del cuerpo y cuándo podés. Si tenés referencias, pegás el link. Cuanto más completo, menos ida y vuelta después.',
+      'Mandás un mensaje directo contando tu idea, tamaño aproximado y zona del cuerpo. Si tenés referencias, sumalas.',
   },
   {
     n: 'II',
     titulo: 'Diego lo lee y contesta',
     texto:
-      'Lo lee una persona, no un sistema. Te dice si entra en lo que hace, cómo lo llevaría a su lenguaje y qué necesita saber todavía.',
+      'Te dice si entra en lo que hace, cómo lo llevaría a su lenguaje y qué más necesita saber. Todo por DM.',
   },
   {
     n: 'III',
     titulo: 'Recién ahí hay fecha',
     texto:
-      'El turno queda firme cuando Diego lo confirma con vos. Hasta ese momento es un pedido y nada más.',
+      'El turno queda firme cuando él te lo confirma por mensaje. Mientras tanto es sólo una charla.',
   },
 ]
 
@@ -151,11 +151,35 @@ function Tapa() {
           <span aria-hidden="true">Tattooer</span>
         </h1>
         <Rule className="mastil__filete" />
+        {/* BOTÓN DE PEDIR TURNO EN LA TAPA:
+            Este es un enlace (anchor link) que dirige al usuario a la sección
+            con el ID "turno", donde se encuentra el formulario.
         <a className="boton boton--grande" href="#turno">
           Pedí tu turno
         </a>
+        */}
+        <div className="tapa__scroll-indicador" aria-hidden="true">
+          <ArrowDown />
+        </div>
       </div>
     </header>
+  )
+}
+
+function AvatarIG({ className = '' }) {
+  return (
+    <a 
+      className={`ig-avatar ${className}`} 
+      href="https://www.instagram.com/diegotattooer?igsh=dGVuem84ZWZ3emw1"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Instagram de Diego Tattooer"
+    >
+      <div className="ig-avatar__border">
+        <img src="/logo/diegotattooer.jpg" alt="Avatar IG de Diego" />
+      </div>
+      <span>@diegotattooer</span>
+    </a>
   )
 }
 
@@ -180,9 +204,14 @@ function Indice() {
         <li><a href="#estudio">El estudio</a></li>
         <li><a href="#pedido">Cómo se pide</a></li>
       </ol>
+      {/* BOTÓN CTA DEL ÍNDICE:
+          Aparece en la barra de navegación pegajosa cuando se hace scroll,
+          y también lleva al formulario de turno. 
       <a className="indice__cta" href="#turno">
         Pedir turno
       </a>
+      */}
+      <AvatarIG className="indice__ig-avatar" />
     </nav>
   )
 }
@@ -247,7 +276,6 @@ function LaMano() {
     <section className="seccion seccion--mano" id="mano" ref={ref} aria-labelledby="mano-t">
       <div className="mano__grid">
         <div className="mano__texto" data-reveal>
-          <p className="rotulo rotulo--claro">Sección II · La mano</p>
           <h2 id="mano-t" className="titular titular--claro">
             El que dibuja es el que tatúa
           </h2>
@@ -333,10 +361,16 @@ function ComoSePide() {
           </li>
         ))}
       </ol>
-      <p className="aviso" data-reveal>
-        <strong>Pedir no es reservar.</strong> Mandarlo no reserva la fecha ni te
-        compromete a nada. El turno existe cuando Diego te lo confirma.
-      </p>
+      <div style={{ marginTop: '3rem', textAlign: 'center' }} data-reveal>
+        <a 
+          className="boton boton--grande" 
+          href="https://www.instagram.com/diegotattooer?igsh=dGVuem84ZWZ3emw1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Escribir por Instagram
+        </a>
+      </div>
     </section>
   )
 }
@@ -361,6 +395,7 @@ function PedirTurno() {
 
   const set = (k) => (e) => setCampos((c) => ({ ...c, [k]: e.target.value }))
 
+  /* Lógica de validación del formulario de turnos */
   function validar() {
     const err = {}
     if (!campos.nombre.trim()) err.nombre = 'Poné tu nombre.'
@@ -371,6 +406,7 @@ function PedirTurno() {
     return err
   }
 
+  /* Manejador del evento Submit del formulario */
   function onSubmit(e) {
     e.preventDefault()
     const err = validar()
@@ -389,6 +425,7 @@ function PedirTurno() {
     if (enviado) resumenRef.current?.focus()
   }, [enviado])
 
+  /* Vista de éxito tras enviar el formulario */
   if (enviado) {
     return (
       <section className="seccion seccion--pedido" id="turno">
@@ -422,11 +459,13 @@ function PedirTurno() {
     )
   }
 
+  /* EL FORMULARIO DE TURNO:
+     Este es el formulario principal que el usuario llena para enviar un pedido.
+     Utiliza el evento onSubmit definido más arriba. */
   return (
     <section className="seccion seccion--pedido" id="turno">
       <form className="pedido" onSubmit={onSubmit} noValidate>
         <div className="pedido__cabecera">
-          <p className="rotulo">Sección V</p>
           <h2 className="titular">Pedir turno</h2>
           <Rule className="filete" />
           <p className="pedido__nota">
@@ -436,6 +475,7 @@ function PedirTurno() {
         </div>
 
         <div className="pedido__campos">
+          {/* Los campos del formulario, manejados por el estado local de React */}
           <Campo
             id="c-nombre"
             etiqueta="Nombre"
@@ -548,47 +588,15 @@ function Campo({ id, etiqueta, ayuda, valor, onChange, error, multilinea, ancho,
 function Pie() {
   return (
     <footer className="pie">
-      <Rule className="filete filete--claro" />
       <div className="pie__grid">
         <div>
           <p className="rotulo rotulo--claro">Dónde sigue</p>
-          <p className="pie__linea">
-            <a
-              className="pie__ig"
-              href="https://instagram.com/ooer"
-              rel="me noopener"
-              target="_blank"
-            >
-              @diegotattooer
-            </a>
-          </p>
+          <div className="pie__linea">
+            <AvatarIG />
+          </div>
           <p className="pie__chico">Ahí está todo lo que publica.</p>
         </div>
-
-        <div>
-          <p className="rotulo rotulo--claro">El estudio</p>
-          <p className="pie__linea">
-            <Pendiente nota="Diego tiene que dar la dirección exacta.">Dirección</Pendiente>
-          </p>
-          <p className="pie__linea">
-            <Pendiente nota="Diego tiene que dar los días y horarios.">Días y horarios</Pendiente>
-          </p>
-          <p className="pie__linea">
-            <Pendiente nota="Diego tiene que dar el número.">WhatsApp</Pendiente>
-          </p>
-        </div>
-
-        <div>
-          <p className="rotulo rotulo--claro">Colofón</p>
-          <p className="pie__chico">
-            Catálogo del Estudio, N.º 1. Las láminas 01 a 03 son flash pintado y firmado
-            por Diego en 2020. Las fotografías son del estudio, sin retocar.
-          </p>
-        </div>
       </div>
-      <p className="pie__firma">
-        <span aria-hidden="true">◆</span> diegotattooer <span aria-hidden="true">◆</span>
-      </p>
     </footer>
   )
 }
@@ -596,7 +604,6 @@ function Pie() {
 function SeccionTitulo({ n, titulo }) {
   return (
     <div className="seccion__cabecera" data-reveal>
-      <p className="rotulo">Sección {n}</p>
       <h2 className="titular">{titulo}</h2>
       <Rule className="filete" />
     </div>
@@ -618,9 +625,11 @@ function Landing() {
 
   return (
     <>
+      {/* 
       <a className="saltar" href="#turno">
         Saltar al pedido de turno
       </a>
+      */}
       <Indice />
       <Tapa />
       <main>
@@ -628,7 +637,7 @@ function Landing() {
         <LaMano />
         <ElEstudio />
         <ComoSePide />
-        <PedirTurno />
+        {/* <PedirTurno /> */}
       </main>
       <Pie />
     </>
