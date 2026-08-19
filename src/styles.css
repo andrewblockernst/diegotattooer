@@ -80,6 +80,35 @@ body::before {
     repeating-linear-gradient(90deg, rgba(237, 236, 230, 0.018) 0 1px, transparent 1px 4px);
 }
 
+/* Pared de flash detrás del catálogo: mosaico fijo y tenue de motivos de línea.
+   Debajo del grano (z 1) y del contenido (z 2); las secciones opacas (la mano en
+   rojo, el pie) lo tapan al pasar por delante, así que sólo asoma sobre el negro. */
+.flash-field {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  color: var(--tinta);
+  opacity: 0.22;
+}
+
+/* Hairline parejo en todos los motivos, sin importar la escala a la que se
+   colocan dentro del mosaico. */
+.flash-field * {
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.25px;
+}
+
+@media (max-width: 44rem) {
+  /* En pantalla chica el mosaico se ve más denso: se achica un punto para no
+     competir con las placas. */
+  .flash-field {
+    opacity: 0.18;
+  }
+}
+
 /* ─── Tipografía base ─────────────────────────────────────────────────────── */
 
 .titular {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Rule, Anchor, Dagger, Stamp, ArrowDown } from './Ornaments.jsx'
+import { Rule, Anchor, Dagger, Stamp, ArrowDown, FlashField } from './Ornaments.jsx'
 import Admin from './Admin.jsx'
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -73,26 +73,6 @@ const ESTUDIO = [
   },
 ]
 
-const PASOS = [
-  {
-    n: 'I',
-    titulo: 'Escribís por Instagram',
-    texto:
-      'Mandás un mensaje directo contando tu idea, tamaño aproximado y zona del cuerpo. Si tenés referencias, sumalas.',
-  },
-  {
-    n: 'II',
-    titulo: 'Diego lo lee y contesta',
-    texto:
-      'Te dice si entra en lo que hace, cómo lo llevaría a su lenguaje y qué más necesita saber. Todo por DM.',
-  },
-  {
-    n: 'III',
-    titulo: 'Recién ahí hay fecha',
-    texto:
-      'El turno queda firme cuando él te lo confirma por mensaje. Mientras tanto es sólo una charla.',
-  },
-]
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 
@@ -202,7 +182,7 @@ function Indice() {
       <ol className="indice__lista">
         <li><a href="#laminas">Láminas</a></li>
         <li><a href="#estudio">El estudio</a></li>
-        <li><a href="#pedido">Cómo se pide</a></li>
+        <li><a href="#pedido">Contacto</a></li>
       </ol>
       {/* BOTÓN CTA DEL ÍNDICE:
           Aparece en la barra de navegación pegajosa cuando se hace scroll,
@@ -349,19 +329,8 @@ function ComoSePide() {
   const ref = useReveal()
   return (
     <section className="seccion seccion--pedido" id="pedido" ref={ref}>
-      <SeccionTitulo n="IV" titulo="Cómo se pide" />
-      <ol className="pasos">
-        {PASOS.map((p) => (
-          <li className="paso" key={p.n} data-reveal>
-            <span className="paso__n">{p.n}</span>
-            <div className="paso__cuerpo">
-              <h3 className="paso__titulo">{p.titulo}</h3>
-              <p>{p.texto}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <div style={{ marginTop: '3rem', textAlign: 'center' }} data-reveal>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }} data-reveal>
+        <p className="rotulo" style={{ margin: '0 auto 1.5rem' }}>Sacá turno</p>
         <a 
           className="boton boton--grande" 
           href="https://www.instagram.com/diegotattooer?igsh=dGVuem84ZWZ3emw1"
@@ -590,11 +559,11 @@ function Pie() {
     <footer className="pie">
       <div className="pie__grid">
         <div>
-          <p className="rotulo rotulo--claro">Dónde sigue</p>
+          <p className="rotulo rotulo--claro">Dónde encontrarme</p>
           <div className="pie__linea">
             <AvatarIG />
           </div>
-          <p className="pie__chico">Ahí está todo lo que publica.</p>
+          <p className="pie__chico">Ahí está todo lo que publico.</p>
         </div>
       </div>
     </footer>
@@ -625,7 +594,8 @@ function Landing() {
 
   return (
     <>
-      {/* 
+      <FlashField />
+      {/*
       <a className="saltar" href="#turno">
         Saltar al pedido de turno
       </a>
